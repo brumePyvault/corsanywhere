@@ -2,9 +2,20 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const axios = require("axios");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = 3000; // Change this if you need to use another port
+
+// Set up rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+
+// Apply the rate limiter to all requests
+app.use(limiter);
 
 // CORS settings to explicitly allow requests from a specific origin
 const corsOptions = {
