@@ -65,7 +65,7 @@ app.use("/proxy", async (req, res) => {
 
 // Root route for health check
 app.get("/", (req, res) => {
-  res.send("Dynamic CORS proxy server is running.");
+  res.send("Dynamic CORS proxy server is runn");
 });
 
 app.listen(PORT, () => {
