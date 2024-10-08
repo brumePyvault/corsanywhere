@@ -56,7 +56,10 @@ app.use("/proxy", async (req, res) => {
     const response = await axios({
       url: targetUrl,
       method: req.method,
-      headers: req.headers,
+      headers: {
+        Authorization: res.headers?.Authorization, // Replace with your Paystack API key
+        "Content-Type": req.headers["content-type"] || "application/json", // Ensure the Content-Type is set correctly
+      },
       data: req.body, // Forward the request body if it exists
     });
 
