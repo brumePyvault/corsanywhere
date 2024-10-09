@@ -62,6 +62,7 @@ app.use("/proxy", async (req, res) => {
       },
       data: req.body, // Forward the request body if it exists
     });
+    console.log(res.headers?.Authorization);
 
     res.status(response.status).json(response.data);
   } catch (error) {
