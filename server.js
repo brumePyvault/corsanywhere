@@ -19,7 +19,7 @@ app.use(limiter);
 
 // CORS settings to explicitly allow requests from a specific origin
 const corsOptions = {
-  origin: "*", // Allow only this origin
+  origin: (origin, callback) => callback(null, true), // Allow only this origin
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders:
     "Origin, X-Requested-With, Content-Type, Accept, Authorization",
@@ -28,23 +28,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.options("*", cors(corsOptions)); // Handle OPTIONS requests for all routes
 // Middleware to handle preflight requests explicitly
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  if (req.method === "OPTIONS") {
-    return res.status(200).end(); // Send OK status for preflight requests
-  }
-  next();
-});
 
 // Dynamic proxy setup
 app.use("/proxy", async (req, res) => {
+  console.log(req.body);
   const targetUrl = req.query.url;
   if (!targetUrl) {
     return res
@@ -57,12 +46,11 @@ app.use("/proxy", async (req, res) => {
       url: targetUrl,
       method: req.method,
       headers: {
-        Authorization: res.headers?.Authorization, // Replace with your Paystack API key
+        Authorization: req.headers?.Authorization, // Replace with your Paystack API key
         "Content-Type": req.headers["content-type"] || "application/json", // Ensure the Content-Type is set correctly
       },
       data: req.body, // Forward the request body if it exists
     });
-    console.log(res.headers?.Authorization);
 
     res.status(response.status).json(response.data);
   } catch (error) {
