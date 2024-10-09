@@ -33,8 +33,8 @@ app.options("*", cors(corsOptions)); // Handle OPTIONS requests for all routes
 
 // Dynamic proxy setup
 app.use("/proxy", async (req, res) => {
-  console.log(req.body);
-  const targetUrl = req.query.url;
+  console.log(req.headers?.authorization);
+  const targetUrl = decodeURIComponent(req.query.url);
   if (!targetUrl) {
     return res
       .status(400)
@@ -46,7 +46,7 @@ app.use("/proxy", async (req, res) => {
       url: targetUrl,
       method: req.method,
       headers: {
-        Authorization: req.headers?.Authorization, // Replace with your Paystack API key
+        Authorization: req.headers?.Authorization || req.headers?.authorization, // Replace with your Paystack API key
         "Content-Type": req.headers["content-type"] || "application/json", // Ensure the Content-Type is set correctly
       },
       data: req.body, // Forward the request body if it exists
