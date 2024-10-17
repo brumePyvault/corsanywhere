@@ -22,7 +22,7 @@ const corsOptions = {
   origin: (origin, callback) => callback(null, true), // Allow only this origin
   methods: "GET, POST, PUT, DELETE, OPTIONS",
   allowedHeaders:
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-xsrf-token",
   credentials: true, // Allow credentials if needed (like cookies or HTTP authentication)
 };
 app.use(cors(corsOptions));
