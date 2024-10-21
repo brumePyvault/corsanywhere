@@ -3,6 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const axios = require("axios");
 const rateLimit = require("express-rate-limit");
+const xss = require("xss-clean");
 
 const app = express();
 const PORT = 3000; // Change this if you need to use another port
@@ -21,13 +22,13 @@ app.use(limiter);
 const corsOptions = {
   origin: (origin, callback) => callback(null, true), // Allow only this origin
   methods: "GET, POST, PUT, DELETE, OPTIONS",
-  allowedHeaders:
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-xsrf-token",
+  allowedHeaders: "*",
   credentials: true, // Allow credentials if needed (like cookies or HTTP authentication)
 };
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(xss());
 app.options("*", cors(corsOptions)); // Handle OPTIONS requests for all routes
 // Middleware to handle preflight requests explicitly
 
