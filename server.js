@@ -49,6 +49,7 @@ app.use("/proxy", async (req, res) => {
       headers: {
         Authorization: req.headers?.Authorization || req.headers?.authorization, // Replace with your Paystack API key
         "Content-Type": req.headers["content-type"] || "application/json", // Ensure the Content-Type is set correctly
+        language:req.headers.language
       },
       data: req.body, // Forward the request body if it exists
     });
