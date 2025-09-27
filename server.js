@@ -54,6 +54,8 @@ app.use("/proxy", async (req, res) => {
       data: req.body, // Forward the request body if it exists
     });
 
+    console.log(response)
+
     res.status(response.status).json(response.data);
   } catch (error) {
     res.status(error.response ? error.response.status : 500).json({
